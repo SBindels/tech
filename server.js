@@ -1,4 +1,5 @@
 const express = require("express");
+const ejs = require("ejs");
 
 const app = express();
 
@@ -7,7 +8,7 @@ const port = process.env.port || 5000;
 
 let data = {
   title: "datingapp",
-  page: "About",
+  page: "Registratie",
   name: "Sjoerd"
 };
 
@@ -16,8 +17,8 @@ app
   .set("view engine", "ejs")
   .set("views", "view");
 
-app.get("/about", (req, res) => {
-  res.render("about.ejs", { data });
+app.get("/registratie", (req, res) => {
+  res.render("registratie.ejs", { data });
 });
 
 app.get("*", (req, res) => {
