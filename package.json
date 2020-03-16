@@ -4,14 +4,17 @@
   "description": "express file server voor back-end",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "lint": "eslint --ignore-path .gitignore ."
   },
   "keywords": [],
   "author": "Sjoerd Bindels",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "mongodb": "^3.5.5",
     "nodemon": "^2.0.2"
   }
 }

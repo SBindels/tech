@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <section class="registratie_form">
-      <form action="">
-        <h2>registreer hier voor deze dating app</h2>
+    <section class="registratie">
+      <form action="/register" method="POST">
+        <h2>Registreer</h2>
         <fieldset>
-          <legend>Voornaam</legend>
           <label for="voornaam">voornaam</label>
           <input
             type="text"
@@ -16,20 +15,22 @@
         </fieldset>
 
         <fieldset>
-          <legend>Achternaam</legend>
-          <label for="achternaam">achternaam</label>
+          <label for="emailadres">emailadres</label>
           <input
-            type="password"
-            name="achternaam"
-            placeholder="achternaam"
-            id="achternaam"
+            type="email"
+            name="emailadres"
+            placeholder="emailadres"
+            id="emailadres"
           />
         </fieldset>
-      </form>
 
-      <section class="button">
-        <button type="submit" name="button">registreer</button>
-      </section>
+        <fieldset>
+          <label for="password">wachtwoord</label>
+          <input type="password" id="password" name="password" required />
+        </fieldset>
+
+        <button type="submit">registreer</button>
+      </form>
     </section>
   </body>
 </html>
