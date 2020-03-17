@@ -4,10 +4,39 @@
     <% include head.ejs %>
   </head>
   <body>
-      <h1>inloggen</h1>
-      <form action= /login method="POST">
+    <h1>Inloggen</h1>
+    <section class="inloggen">
+      <form action="">
+        <fieldset>
+          <label for="voornaam">voornaam</label>
+          <input
+            type="text"
+            name="voornaam"
+            placeholder="voornaam"
+            id="voornaam"
+          />
+        </fieldset>
 
-        <label>Naam <input name = naam></label>
+        <fieldset>
+          <label for="emailadres">emailadres</label>
+          <input
+            type="email"
+            name="emailadres"
+            placeholder="emailadres"
+            id="emailadres"
+          />
+        </fieldset>
+
+        <fieldset>
+          <label for="pass">Wachtwoord</label>
+          <input type="password" id="pass" name="wachtwoord" required />
+        </fieldset>
+      </form>
+
+      <section class="button">
+        <button type="button" name="button">registreer</button>
+      </section>
+    </section>
     </form>
   </body>
 </html>
