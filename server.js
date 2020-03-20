@@ -44,7 +44,8 @@ mongodb.MongoClient.connect(url, function(err, client) {
 app
   .use(express.static("public"))
   .set("view engine", "ejs")
-  .set("views", "view");
+  .set("views", "view")
+  .get("/registreren", form);
 
 app.get("/login", (req, res) => {
   res.render("login.ejs");
@@ -64,3 +65,7 @@ app.get("*", (req, res) => {
 
 //Server online notice: node server.js
 app.listen(port, () => console.log(`Server started on port ${port}`));
+
+function form(req, res) {
+  res.render("registratie.esj");
+}
