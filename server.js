@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongodb = require("mongodb");
 const ejs = require("ejs");
+const bodyparser = require("body-parser");
 const port = process.env.port || 5000;
 
 require("dotenv").config();
@@ -45,7 +46,9 @@ app
   .use(express.static("public"))
   .set("view engine", "ejs")
   .set("views", "view")
-  .get("/registreren", form);
+  .set(bodyparser.urlencoded({ extended: true }));
+// .post("./", add)
+// .get("/registratie", form);
 
 app.get("/login", (req, res) => {
   res.render("login.ejs");
@@ -57,7 +60,31 @@ app.get("/registratie", (req, res) => {
   console.log(collection);
 });
 
-app.post("/registratie", (req, res) => {});
+//app.post("/registratie", (req, res) => {});
+
+// VAN TESS
+function form(res, req) {
+  res.render("registratie.ejs");
+}
+
+function add(res, req) {
+  db.collection("users").insertOne(
+    {
+      naam: req.body.voornaam,
+      email: req.body.emailadres,
+      wachtwoord: req.body.wachtwoord
+    },
+    done
+  );
+}
+
+function done(req, res) {
+  if (err) {
+    next(err);
+  } else {
+    res.redirect("/");
+  }
+}
 
 app.get("*", (req, res) => {
   res.send("Error! 404 this route doesn't exist");
