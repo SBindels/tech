@@ -3,36 +3,23 @@
   <body>
     <h1>Registratie</h1>
     <section class="registratie">
-      <form action="./" method="post">
+      <form action=/ method='post'>
         <fieldset>
           <label for="voornaam">voornaam</label>
-          <input
-            type="text"
-            name="voornaam"
-            placeholder="voornaam"
-            id="voornaam"
-          />
+          <input type="text" name="voornaam" placeholder="voornaam" />
         </fieldset>
 
         <fieldset>
           <label for="emailadres">emailadres</label>
-          <input
-            type="email"
-            name="emailadres"
-            placeholder="emailadres"
-            id="emailadres"
-          />
+          <input type="email" name="emailadres" placeholder="emailadres" />
         </fieldset>
 
         <fieldset>
           <label for="pass">Wachtwoord</label>
-          <input type="password" id="pass" name="wachtwoord" required />
+          <input type="password" name="wachtwoord" required />
         </fieldset>
+        <button>registreer</button>
       </form>
-
-      <section class="button">
-        <button type="button" name="button">registreer</button>
-      </section>
     </section>
   </body>
 </html>

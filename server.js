@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+//const app = express();
 const mongodb = require("mongodb");
 const ejs = require("ejs");
 const bodyparser = require("body-parser");
@@ -7,11 +7,11 @@ const port = process.env.port || 5000;
 
 require("dotenv").config();
 
-let data = {
-  title: "datingapp",
-  page: "Registratie",
-  name: "Sjoerd"
-};
+// let data = {
+//   title: "datingapp",
+//   page: "Registratie",
+//   name: "Sjoerd"
+// };
 
 let database = null;
 
@@ -20,9 +20,11 @@ const url = "mongodb://" + process.env.DB_HOST + ":" + process.env.DB_PORT;
 mongodb.MongoClient.connect(url, function(err, client) {
   if (err) {
     throw err;
+    console.log("unable to connect to db");
   }
 
   database = client.db(process.env.DB_NAME);
+  console.log("successfully connected to db");
 });
 
 // const MongoClient = require("mongodb").MongoClient;
@@ -42,33 +44,40 @@ mongodb.MongoClient.connect(url, function(err, client) {
 //   collection = client.db("datingapp").collection("testtabel");
 // });
 
-app
+express()
   .use(express.static("public"))
   .set("view engine", "ejs")
   .set("views", "view")
-  .set(bodyparser.urlencoded({ extended: true }));
-// .post("./", add)
-// .get("/registratie", form);
+  .use(bodyparser.urlencoded({ extended: true }))
+  .post("/", add)
+  .get("/registratie", Registratieform)
+  .get("/login", loginForm)
+  .use(pageNotFound)
+  .listen(5000);
 
-app.get("/login", (req, res) => {
-  res.render("login.ejs");
-});
+// app.get("/login", (req, res) => {
+//   res.render("login.ejs");
+// });
 
-app.get("/registratie", (req, res) => {
-  res.render("registratie.ejs", { data });
-  collection.insertOne({ naam: "sjoerd" });
-  console.log(collection);
-});
+// app.get("/registratie", (req, res) => {
+//   res.render("registratie.ejs", { data });
+//   collection.insertOne({ naam: "sjoerd" });
+//   console.log(collection);
+// });
 
 //app.post("/registratie", (req, res) => {});
 
 // VAN TESS
-function form(res, req) {
+function loginForm(req, res) {
+  res.render("login.ejs");
+}
+
+function Registratieform(req, res) {
   res.render("registratie.ejs");
 }
 
-function add(res, req) {
-  db.collection("users").insertOne(
+function add(req, res, next) {
+  database.collection("users").insertOne(
     {
       naam: req.body.voornaam,
       email: req.body.emailadres,
@@ -76,23 +85,22 @@ function add(res, req) {
     },
     done
   );
-}
-
-function done(req, res) {
-  if (err) {
-    next(err);
-  } else {
-    res.redirect("/");
+  function done(req, res) {
+    if (err) {
+      next(err);
+    } else {
+      res.redirect("/");
+    }
   }
 }
 
-app.get("*", (req, res) => {
-  res.send("Error! 404 this route doesn't exist");
-});
+// express.get("*", (req, res) => {
+//   res.send("Error! 404 this route doesn't exist");
+// });
+
+function pageNotFound(req, res) {
+  res.render("404.ejs");
+}
 
 //Server online notice: node server.js
-app.listen(port, () => console.log(`Server started on port ${port}`));
-
-function form(req, res) {
-  res.render("registratie.esj");
-}
+//express.listen(port, () => console.log(`Server started on port ${port}`));
