@@ -1,8 +1,10 @@
 const express = require("express");
 //const app = express();
 const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 const ejs = require("ejs");
 const bodyparser = require("body-parser");
+const Schema = mongoose.Schema;
 const port = process.env.port || 5000;
 
 require("dotenv").config();
@@ -67,6 +69,14 @@ express()
 
 //app.post("/registratie", (req, res) => {});
 
+const userSchema = new Schema({
+  naam: String,
+  emailadres: String,
+  wachtwoord: String
+});
+
+const User = mongoose.model("User", userSchema);
+
 // VAN TESS
 function loginForm(req, res) {
   res.render("login.ejs");
@@ -93,10 +103,6 @@ function add(req, res, next) {
     }
   }
 }
-
-// express.get("*", (req, res) => {
-//   res.send("Error! 404 this route doesn't exist");
-// });
 
 function pageNotFound(req, res) {
   res.render("404.ejs");
