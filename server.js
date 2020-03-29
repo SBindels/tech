@@ -9,11 +9,11 @@ const port = process.env.port || 5000;
 
 require("dotenv").config();
 
-// let data = {
-//   title: "datingapp",
-//   page: "Registratie",
-//   name: "Sjoerd"
-// };
+let data = {
+  title: "datingapp",
+  page: "Registratie",
+  name: "Sjoerd"
+};
 
 let database = null;
 
@@ -51,7 +51,7 @@ express()
   .set("view engine", "ejs")
   .set("views", "view")
   .use(bodyparser.urlencoded({ extended: true }))
-  .post("/", add)
+  .post("/registerUser", add)
   .get("/registratie", Registratieform)
   .get("/login", loginForm)
   .use(pageNotFound)
@@ -69,21 +69,21 @@ express()
 
 //app.post("/registratie", (req, res) => {});
 
-const userSchema = new Schema({
-  naam: String,
-  emailadres: String,
-  wachtwoord: String
-});
+// const userSchema = new Schema({
+//   naam: String,
+//   emailadres: String,
+//   wachtwoord: String
+// });
 
-const User = mongoose.model("User", userSchema);
+// const User = mongoose.model("User", userSchema);
 
 // VAN TESS
 function loginForm(req, res) {
-  res.render("login.ejs");
+  res.render("login.ejs", { data });
 }
 
 function Registratieform(req, res) {
-  res.render("registratie.ejs");
+  res.render("registratie.ejs", { data });
 }
 
 function add(req, res, next) {
@@ -95,11 +95,11 @@ function add(req, res, next) {
     },
     done
   );
-  function done(req, res) {
+  function done(err, data) {
     if (err) {
       next(err);
     } else {
-      res.redirect("/");
+      res.redirect("/login");
     }
   }
 }
