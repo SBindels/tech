@@ -54,6 +54,8 @@ express()
   .post("/registerUser", add)
   .get("/registratie", Registratieform)
   .get("/login", loginForm)
+  .get("/loginDone", compareCredentials)
+  .get("/loginFailed", compareCredentials)
   .use(pageNotFound)
   .listen(5000);
 
@@ -101,6 +103,16 @@ function add(req, res, next) {
     } else {
       res.redirect("/login");
     }
+  }
+}
+
+function compareCredentials(req, res) {
+  if (data.wachtwoord === req.body.wachtwoord) {
+    console.log("succesvol ingelogd :)");
+    res.render("loginDone.ejs");
+  } else {
+    console.log("login mislukt :(");
+    res.render("loginFailed.ejs");
   }
 }
 
