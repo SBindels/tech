@@ -1,10 +1,10 @@
 const express = require("express");
 //const app = express();
 const mongodb = require("mongodb");
-const mongoose = require("mongoose");
 const ejs = require("ejs");
 const bodyparser = require("body-parser");
-const Schema = mongoose.Schema;
+const bcrypt = require("bcrypt");
+const saltRound = 10;
 const port = process.env.port || 5000;
 
 require("dotenv").config();
@@ -29,31 +29,16 @@ mongodb.MongoClient.connect(url, function(err, client) {
   console.log("successfully connected to db");
 });
 
-// const MongoClient = require("mongodb").MongoClient;
-// const uri =
-//   "mongodb+srv://" +
-//   process.env.DB_USER +
-//   process.env.DB_PASS +
-//   ":" +
-//   "@cluster0-abpqe.mongodb.net/test?retryWrites=true&w=majority";
-
-// const client = new MongoClient(uri, { useNewUrlParser: true });
-// let collection;
-// client.connect(function(err, client) {
-//   if (err) {
-//     throw err;
-//   }
-//   collection = client.db("datingapp").collection("testtabel");
-// });
-
 express()
   .use(express.static("public"))
   .set("view engine", "ejs")
   .set("views", "view")
   .use(bodyparser.urlencoded({ extended: true }))
   .post("/registerUser", add)
+  .get("/", gebruikers)
   .get("/registratie", Registratieform)
   .get("/login", loginForm)
+  .get("/login", compareCredentials)
   .get("/loginDone", compareCredentials)
   .get("/loginFailed", compareCredentials)
   .use(pageNotFound)
@@ -71,15 +56,22 @@ express()
 
 //app.post("/registratie", (req, res) => {});
 
-// const userSchema = new Schema({
-//   naam: String,
-//   emailadres: String,
-//   wachtwoord: String
-// });
-
-// const User = mongoose.model("User", userSchema);
-
 // VAN TESS
+function gebruikers(req, res, next) {
+  database
+    .collection("users")
+    .find()
+    .toArray(done);
+
+  function done(err, data) {
+    if (err) {
+      next(err);
+    } else {
+      res.render("login.ejs", { data: data });
+    }
+  }
+}
+
 function loginForm(req, res) {
   res.render("login.ejs", { data });
 }
@@ -107,12 +99,20 @@ function add(req, res, next) {
 }
 
 function compareCredentials(req, res) {
-  if (data.wachtwoord === req.body.wachtwoord) {
-    console.log("succesvol ingelogd :)");
-    res.render("loginDone.ejs");
-  } else {
-    console.log("login mislukt :(");
-    res.render("loginFailed.ejs");
+  database.collection("users").findOne({ email: req.body.emailadres }, done);
+
+  function done(err, data) {
+    if (err) {
+      next(err);
+    } else {
+      if (data.wachtwoord === req.body.wachtwoord) {
+        console.log("succesvol ingelogd :)");
+        res.render("/loginDone");
+      } else {
+        console.log("login mislukt :(");
+        res.render("/loginFailed");
+      }
+    }
   }
 }
 
