@@ -1,3 +1,4 @@
+//const en require
 const express = require("express");
 //const app = express();
 const mongodb = require("mongodb");
@@ -15,6 +16,7 @@ let data = {
   name: "Sjoerd"
 };
 
+//MongoDB database
 let database = null;
 
 const url = "mongodb://" + process.env.DB_HOST + ":" + process.env.DB_PORT;
@@ -29,35 +31,24 @@ mongodb.MongoClient.connect(url, function(err, client) {
   console.log("successfully connected to db");
 });
 
+//routes
 express()
   .use(express.static("public"))
   .set("view engine", "ejs")
   .set("views", "view")
   .use(bodyparser.urlencoded({ extended: true }))
   .post("/registerUser", add)
-  .get("/", gebruikers)
+  .get("/", users)
   .get("/registratie", Registratieform)
   .get("/login", loginForm)
   .get("/login", compareCredentials)
   .get("/loginDone", compareCredentials)
   .get("/loginFailed", compareCredentials)
+  .post("/update", updatePassword)
   .use(pageNotFound)
   .listen(5000);
 
-// app.get("/login", (req, res) => {
-//   res.render("login.ejs");
-// });
-
-// app.get("/registratie", (req, res) => {
-//   res.render("registratie.ejs", { data });
-//   collection.insertOne({ naam: "sjoerd" });
-//   console.log(collection);
-// });
-
-//app.post("/registratie", (req, res) => {});
-
-// VAN TESS
-function gebruikers(req, res, next) {
+function users(req, res, next) {
   database
     .collection("users")
     .find()
@@ -107,18 +98,32 @@ function compareCredentials(req, res) {
     } else {
       if (data.wachtwoord === req.body.wachtwoord) {
         console.log("succesvol ingelogd :)");
-        res.render("/loginDone");
+        res.redirect("/loginDone");
       } else {
         console.log("login mislukt :(");
-        res.render("/loginFailed");
+        res.redirect("/login");
       }
     }
   }
 }
 
+//update password function , niet zelf geschreven
+function updatePassword(req, res) {
+  let user = req.body.emailadres;
+  console.log(user._id);
+
+  database.collection("users").updateOne(
+    { _id: mongo.ObjectId(user._id) },
+    {
+      $set: {
+        emailadres: req.body.emailadres,
+        wachtwoord: req.body.wachtwoord
+      }
+    }
+  );
+  res.redirect("/login");
+}
+
 function pageNotFound(req, res) {
   res.render("404.ejs");
 }
-
-//Server online notice: node server.js
-//express.listen(port, () => console.log(`Server started on port ${port}`));
