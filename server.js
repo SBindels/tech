@@ -5,7 +5,8 @@ const mongodb = require("mongodb");
 const ejs = require("ejs");
 const bodyparser = require("body-parser");
 const bcrypt = require("bcrypt");
-const saltRound = 10;
+const saltRounds = 10;
+const plainTextPassword = "dit_is_niet_mijn_wachtwoord";
 const session = require("express-session");
 const port = process.env.port || 5000;
 ObjectId = require("mongodb").ObjectID;
@@ -90,6 +91,9 @@ function add(req, res, next) {
     },
     done
   );
+
+  //hash met bcrypt
+
   function done(err, data) {
     if (err) {
       next(err);
