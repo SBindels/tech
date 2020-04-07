@@ -6,7 +6,9 @@ const ejs = require("ejs");
 const bodyparser = require("body-parser");
 const bcrypt = require("bcrypt");
 const saltRound = 10;
+const session = require("express-session");
 const port = process.env.port || 5000;
+ObjectId = require("mongodb").ObjectID;
 
 require("dotenv").config();
 
@@ -37,6 +39,13 @@ express()
   .set("view engine", "ejs")
   .set("views", "view")
   .use(bodyparser.urlencoded({ extended: true }))
+  .use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true
+    })
+  )
   .post("/registerUser", add)
   .get("/", users)
   .get("/registratie", Registratieform)
@@ -71,6 +80,7 @@ function Registratieform(req, res) {
   res.render("registratie.ejs", { data });
 }
 
+//Functie dat data verzend naar mijn MongoDB database
 function add(req, res, next) {
   database.collection("users").insertOne(
     {
@@ -89,6 +99,7 @@ function add(req, res, next) {
   }
 }
 
+//Functie voor het vergelijken van de gebruiker zijn emailadres en wachtwoord
 function compareCredentials(req, res) {
   database.collection("users").findOne({ email: req.body.emailadres }, done);
 
@@ -96,8 +107,9 @@ function compareCredentials(req, res) {
     if (err) {
       next(err);
     } else {
-      if (data.wachtwoord === req.body.wachtwoord) {
-        console.log("succesvol ingelogd :)");
+      if (req.body.wachtwoord === data.wachtwoord) {
+        req.session.voornaam = data;
+        console.log("succesvol ingelogd als" + data.voornaam);
         res.redirect("/loginDone");
       } else {
         console.log("login mislukt :(");
@@ -109,14 +121,14 @@ function compareCredentials(req, res) {
 
 //update password function , niet zelf geschreven
 function updatePassword(req, res) {
-  let user = req.body.emailadres;
-  console.log(user._id);
+  let users = req.session.emailadres;
+  console.log(users._id);
 
   database.collection("users").updateOne(
-    { _id: mongo.ObjectId(user._id) },
+    { _id: mongo.ObjectId(users._id) },
     {
       $set: {
-        emailadres: req.body.emailadres,
+        email: req.body.emailadres,
         wachtwoord: req.body.wachtwoord
       }
     }
