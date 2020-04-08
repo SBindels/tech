@@ -16,7 +16,7 @@ require("dotenv").config();
 let data = {
   title: "datingapp",
   page: "Registratie",
-  name: "Sjoerd"
+  name: "Sjoerd",
 };
 
 //MongoDB database
@@ -24,10 +24,12 @@ let database = null;
 
 const url = "mongodb://" + process.env.DB_HOST + ":" + process.env.DB_PORT;
 
-mongodb.MongoClient.connect(url, function(err, client) {
+mongodb.MongoClient.connect(url, { useUnifiedTopology: true }, function (
+  err,
+  client
+) {
   if (err) {
-    throw err;
-    console.log("unable to connect to db");
+    console.log(err);
   }
 
   database = client.db(process.env.DB_NAME);
@@ -36,15 +38,15 @@ mongodb.MongoClient.connect(url, function(err, client) {
 
 //routes
 express()
-  .use(express.static("public"))
+  .use(express.static("public")) // gebruik de template engine EJS
   .set("view engine", "ejs")
-  .set("views", "view")
-  .use(bodyparser.urlencoded({ extended: true }))
+  .set("views", "view") // EJS files staan in /views
+  .use(bodyparser.urlencoded({ extended: true })) // body-parser krijg je toegang tot Request body objecten zoals req.body.voornaam
   .use(
     session({
       secret: process.env.SESSION_SECRET,
       resave: false,
-      saveUninitialized: true
+      saveUninitialized: true,
     })
   )
   .post("/registerUser", add)
@@ -59,10 +61,7 @@ express()
   .listen(5000);
 
 function users(req, res, next) {
-  database
-    .collection("users")
-    .find()
-    .toArray(done);
+  database.collection("users").find().toArray(done);
 
   function done(err, data) {
     if (err) {
@@ -87,12 +86,15 @@ function add(req, res, next) {
     {
       naam: req.body.voornaam,
       email: req.body.emailadres,
-      wachtwoord: req.body.wachtwoord
+      wachtwoord: req.body.wachtwoord,
     },
     done
   );
 
-  //hash met bcrypt
+  // //hash met bcrypt
+  // bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
+  //   // Store hash in your password DB.
+  // });
 
   function done(err, data) {
     if (err) {
@@ -123,7 +125,7 @@ function compareCredentials(req, res) {
   }
 }
 
-//update password function , niet zelf geschreven
+//update password function van Slack Inju
 function updatePassword(req, res) {
   let users = req.session.emailadres;
   console.log(users._id);
@@ -133,8 +135,8 @@ function updatePassword(req, res) {
     {
       $set: {
         email: req.body.emailadres,
-        wachtwoord: req.body.wachtwoord
-      }
+        wachtwoord: req.body.wachtwoord,
+      },
     }
   );
   res.redirect("/login");
