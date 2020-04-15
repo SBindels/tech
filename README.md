@@ -4,6 +4,10 @@
 
 Gebruiker kan via een form zich zelf registreren binnen de dating app. In deze form kan de gebruiker een username , emailadres en password invoeren. Deze data wordt opgeslagen in een database. Wanneer de gebruiker is geregisteerd kan hij/zij inloggen met het emailadres en wachtwoord.
 
+![Registeren](images/registratie.png)
+
+![Inloggen](images/inloggen.png)
+
 ## Use
 
 1. Clone de applicatie
