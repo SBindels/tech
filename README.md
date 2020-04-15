@@ -39,3 +39,23 @@ Alle documentatie kan je vinden in mijn [tech wiki](https://github.com/SBindels/
 ## Licentie
 
 Project is gelicenseerd met een MIT License, (zie LICENSE)
+
+## Bronnen
+
+Getting Started – Pug. (z.d.). Geraadpleegd op 20 maart 2020, van https://pugjs.org/api/getting-started.html
+
+EJS (z.d). Geraadpleegd op 20 maart 2020, van https://ejs.co/#install
+
+Handlebars. (z.d.). Geraadpleegd op 20 maart 2020, van https://handlebarsjs.com/
+
+About pull requests - GitHub Help. (z.d.). Geraadpleegd op 23 maart 2020, van https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests
+
+Understanding the GitHub flow · GitHub Guides. (z.d.). Geraadpleegd op 23 maart 2020, van https://guides.github.com/introduction/flow/
+
+GitHub features: Intuitive code review tools. (z.d.). Geraadpleegd op 24 maart 2020, van https://github.com/features/code-review/
+
+Fork a repo - GitHub Help. (z.d.). Geraadpleegd op 24 maart 2020, van https://help.github.com/en/github/getting-started-with-github/fork-a-repo
+
+https://www.npmjs.com/package/bcrypt
+
+https://www.youtube.com/watch?v=6FOq4cUdH8k&t=3923s
