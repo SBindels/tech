@@ -1,7 +1,7 @@
 //const en require
 const express = require("express");
 //const app = express();
-const mongodb = require("mongodb");
+const mongo = require("mongodb");
 const ejs = require("ejs");
 const bodyparser = require("body-parser");
 const bcrypt = require("bcrypt");
@@ -13,28 +13,34 @@ ObjectId = require("mongodb").ObjectID;
 
 require("dotenv").config();
 
+//MongoDB database
+let db = null;
+let collectionUsers;
+const MongoClient = require("mongodb").MongoClient;
+
+const uri =
+  "mongodb+srv://" +
+  process.env.DB_USER +
+  ":" +
+  process.env.DB_PASS +
+  "@cluster0-abpqe.mongodb.net/test?retryWrites=true&w=majority";
+
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+//database connect
+client.connect(function (err, client) {
+  if (err) {
+    throw err;
+  }
+  collectionUsers = client.db("datingapp").collection("users");
+});
+
 let data = {
   title: "datingapp",
-  page: "Registratie",
-  name: "Sjoerd",
 };
-
-//MongoDB database
-let database = null;
-
-const url = "mongodb://" + process.env.DB_HOST + ":" + process.env.DB_PORT;
-
-mongodb.MongoClient.connect(url, { useUnifiedTopology: true }, function (
-  err,
-  client
-) {
-  if (err) {
-    console.log(err);
-  }
-
-  database = client.db(process.env.DB_NAME);
-  console.log("successfully connected to db");
-});
 
 //routes
 express()
@@ -49,11 +55,13 @@ express()
       saveUninitialized: true,
     })
   )
-  .post("/registerUser", add)
   .get("/", users)
   .get("/registratie", Registratieform)
+
   .get("/login", loginForm)
-  .get("/login", compareCredentials)
+
+  .post("/login", compareCredentials)
+  .post("/registratie", registerUser)
   .get("/loginDone", compareCredentials)
   .get("/loginFailed", compareCredentials)
   .post("/update", updatePassword)
@@ -61,7 +69,7 @@ express()
   .listen(5000);
 
 function users(req, res, next) {
-  database.collection("users").find().toArray(done);
+  db.collection("users").find().toArray(done);
 
   function done(err, data) {
     if (err) {
@@ -81,8 +89,8 @@ function Registratieform(req, res) {
 }
 
 //Functie dat data verzend naar mijn MongoDB database
-function add(req, res, next) {
-  database.collection("users").insertOne(
+function registerUser(req, res, next) {
+  db.collection("users").insertOne(
     {
       naam: req.body.voornaam,
       email: req.body.emailadres,
@@ -107,16 +115,23 @@ function add(req, res, next) {
 
 //Functie voor het vergelijken van de gebruiker zijn emailadres en wachtwoord
 function compareCredentials(req, res) {
-  database.collection("users").findOne({ email: req.body.emailadres }, done);
+  db.collection("users").findOne(
+    {
+      email: req.body.emailadres,
+    },
+    done
+  );
 
   function done(err, data) {
+    // console.log(data);
     if (err) {
       next(err);
     } else {
-      if (req.body.wachtwoord === data.wachtwoord) {
-        req.session.voornaam = data;
-        console.log("succesvol ingelogd als" + data.voornaam);
-        res.redirect("/loginDone");
+      if (data.wachtwoord === req.body.wachtwoord) {
+        console.log("succesvol ingelogd :)");
+        req.session.user = data.username;
+        res.redirect("/findMatch");
+        // res.send("hoi");
       } else {
         console.log("login mislukt :(");
         res.redirect("/login");
@@ -130,7 +145,7 @@ function updatePassword(req, res) {
   let users = req.session.emailadres;
   console.log(users._id);
 
-  database.collection("users").updateOne(
+  db.collection("users").updateOne(
     { _id: mongo.ObjectId(users._id) },
     {
       $set: {
