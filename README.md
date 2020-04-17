@@ -36,6 +36,16 @@ Alle documentatie kan je vinden in mijn [tech wiki](https://github.com/SBindels/
 
 - Sjoerd Bindels
 
+## Volledige Applicatie
+
+Hosted via Heroku: https://datingapp-cmd.herokuapp.com/
+
+### Auteurs volledige applicatie:
+
+- Sjoerd Bindels
+- Sam Slotemaker
+- Max Wieringa
+
 ## Licentie
 
 Project is gelicenseerd met een MIT License, (zie LICENSE)
