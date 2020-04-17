@@ -40,6 +40,8 @@ Alle documentatie kan je vinden in mijn [tech wiki](https://github.com/SBindels/
 
 Hosted via Heroku: https://datingapp-cmd.herokuapp.com/
 
+<a href="https://datingapp-cmd.herokuapp.com/" target="_blank">datingapp</a>
+
 ### Auteurs volledige applicatie:
 
 - Sjoerd Bindels
