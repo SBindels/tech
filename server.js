@@ -160,3 +160,5 @@ function updatePassword(req, res) {
 function pageNotFound(req, res) {
   res.render("404.ejs");
 }
+
+console.log('test')
